@@ -1,0 +1,55 @@
+name: Deploy to GCP (Staging)
+
+on:
+  push:
+    branches: [ staging ]
+
+jobs:
+    deploy:
+        name: Setup Gcloud Account
+        runs-on: ubuntu-latest
+        env:
+          IMAGE_NAME: pre-pad-react
+        steps:
+
+        - name: Login
+          uses: google-github-actions/setup-gcloud@v0
+          with:
+            project_id: ${{ secrets.GCR_PROJECT }}
+            service_account_email: ${{ secrets.GCP_EMAIL }}
+            service_account_key: ${{ secrets.GCR_SA_KEY }}
+
+        - name: Configure Docker
+          run: gcloud auth configure-docker --quiet
+
+        - name: Checkout repository
+          uses: actions/checkout@v2
+
+        - name: Build Docker image
+          run: docker build -f Dockerfile.staging -t gcr.io/prepad-staging/$IMAGE_NAME .
+
+        - name: Push Docker image
+          run: docker push gcr.io/prepad-staging/$IMAGE_NAME
+
+        - name: Deploy Docker image
+          run: gcloud run deploy ${{ secrets.GCR_PROJECT }} --image gcr.io/prepad-staging/$IMAGE_NAME --region us-west2 --platform managed
+
+    azure:
+        name: Deploy to Azure (Staging)
+        runs-on: ubuntu-latest
+        steps:
+
+        - uses: azure/docker-login@v1
+          with:
+            login-server: prepadapp.azurecr.io
+            username: ${{ secrets.AZURE_USER }}
+            password: ${{ secrets.AZURE_TOKEN }}
+
+        - name: 'Checkout GitHub Action'
+          uses: actions/checkout@v2
+
+        - name: Build image
+          run: docker build -f Dockerfile.staging -t prepadapp.azurecr.io/prepad-staging/prepad-app .
+
+        - name: Push image
+          run: docker push prepadapp.azurecr.io/prepad-staging/prepad-app
