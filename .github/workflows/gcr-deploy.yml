@@ -1,9 +1,9 @@
-name: Deploy to GCP (Staging)
+name: Test on PR to Staging
 
 on:
   pull_request:
     branches:
-      - '*'
+      - staging
 jobs:
   test:
     name: Run Tests
