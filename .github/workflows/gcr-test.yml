@@ -1,12 +1,12 @@
-name: Deploy
+name: Test on PR to Staging
 
 on:
   pull_request:
     branches:
       - staging
 jobs:
-  deploy:
-    name: This is deploy
+  test:
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -14,3 +14,6 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      - name: Run tests
+        run: npm test
