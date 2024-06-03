@@ -2,14 +2,14 @@ name: Deploy to GCP (Staging)
 
 on:
   push:
+    branches: [ staging ]
+  pull_request:
     branches:
-      - "*"
-
+      - '*'
 jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'   # Run only on push events
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
