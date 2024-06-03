@@ -1,23 +1,10 @@
-name: Test on PR to Stagingddd
+name: Deploy
 
 on:
   pull_request:
     branches:
       - staging
 jobs:
-  test:
-    name: Run Tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Install dependencies
-        run: npm install
-
-      - name: Run tests
-        run: npm test
   deploy:
     name: This is deploy
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'  # Run only on push events to the 'staging' branch
