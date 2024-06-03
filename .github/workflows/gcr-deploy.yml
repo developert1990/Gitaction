@@ -8,6 +8,7 @@ jobs:
   test:
     name: Run Tests
     runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'  # Run only on push events to the 'staging' branch
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
