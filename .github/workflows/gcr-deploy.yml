@@ -1,10 +1,9 @@
 name: Deploy to GCP (Staging)
 
 on:
-  push:
+  pull_request:
     branches:
-      - staging
-
+      - '*'
 jobs:
   test:
     name: Run Tests
@@ -18,3 +17,7 @@ jobs:
 
       - name: Run tests
         run: npm test
+  deploy:
+    name: This is deploy
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/staging'  # Run only on push events to the 'staging' branch
